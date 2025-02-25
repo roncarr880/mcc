@@ -270,7 +270,10 @@ void preturn(){
 extern int last_ret;
  
   if( pushed ) postfun2();
-  if( last_ret == 0 ) printf("\tRTS\n");
+  if( last_ret == 0 ){
+     if( shortfun ) printf("\tRTI\n");
+     else printf("\tRTS\n");
+  }
 
 }
 
@@ -1143,15 +1146,17 @@ else if( e1->datasize == 2 ) {  /* int and pointer code 8 + 16 */
          }
       break; /* was dad d */
       case '-':
-         printf("\tXGDY\n");
-         printf("\tCOMA\n");
-         printf("\tCOMB\n");
-         printf("\tADDD\t#1\n");
-         printf("\tSTD\t_tempY\n");
-         printf("\tXGDY\n");
-         printf("\tADDD\t_tempY\n");
+         printf("\tSTY\t_tempY\n");
+         printf("\tSUBD\t_tempY\n");
       break;
-      default: error("Only add/sub supported");
+      case '>':
+      case '<':
+         if( op == '<' ) printf("\tLSLD\n");
+         else printf("\tLSRD\n");
+         printf("\tDEY\n");
+         printf("\tBNE\t*-3\n");
+      break;
+      default: error("Only add/sub/shift supported");
       }
    flags= 0;
  /*  printf("\tpop\td\n"); */
@@ -1323,6 +1328,7 @@ extern int last_ret;
    if( pushed ) postfun2();
    printf("%s: ",p);
    if( struct_def ) nl(), struct_def = 0;
+   shortfun = ( *p == '_' ) ? 1 : 0;
 }
 
 void pilabel( int num ){   /* print a label from number */
