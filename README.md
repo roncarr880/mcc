@@ -14,4 +14,7 @@ The 16F pics do not have a data stack, all variables are global or static.  The 
 A rich variety of variables can be declared including arrays, structures, string literal, etc.  Sometimes some assembly code will be needed to implement
 features that are not basic to the target processor.  Example: mult and divide is not implemented for most.
 
+The zip file is a snapshot of all at a certain time point.  External files ( example : mc11out.c ) are improvements and would need to be compiled and 
+linked to be up to date.
+
 
