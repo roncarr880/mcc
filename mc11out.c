@@ -271,7 +271,12 @@ extern int last_ret;
  
   if( pushed ) postfun2();
   if( last_ret == 0 ){
-     if( shortfun ) printf("\tRTI\n");
+     if( shortfun ){
+       printf("\tPULY\n");
+       printf("\tSTY\t_tempY\n");
+     /*  printf("\tPULX\n"); is restored by RTI sequence */
+       printf("\tRTI\n");
+     }
      else printf("\tRTS\n");
   }
 
@@ -1405,6 +1410,16 @@ void dumpdata(){
 void center(char *p){
   plabel( p );
   nl();
+
+  if( shortfun ){
+     /* printf("\tPSHX\n");  is saved by interrupt sequence */
+      printf("\tXGDX\n");
+      printf("\tSUBD  #16\n");
+      printf("\tXGDX\n");
+      printf("\tLDY\t_tempY\n");
+      printf("\tPSHY\n");
+  }
+     
 }
 
 void rel( int d ){
