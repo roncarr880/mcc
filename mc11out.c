@@ -1288,6 +1288,9 @@ void dbytes( long val, int size ){ /* output as list of DB's lsb to msb */
 long div= 1;   
 long i;
 
+  dbytes_big( val, size );
+  return; 
+
    printf("\tFCB ");
    while( size ){
       i= (val/div) % 256;
@@ -1297,6 +1300,25 @@ long i;
       if( --size ) printf(",");
       }
    nl();
+}
+
+void dbytes_big( long val, int size ){   /* output in big endian order for 68hc11 */
+long div;
+long i;
+
+   i = size;
+   div = 1;
+   while( --i ) div *= 256;
+   printf("\tFCB ");
+   while( size ){
+      i = val/div;
+      val = val % div;
+      printf("%ld",i);
+      div /= 256;
+      if( --size ) printf(",");
+   }
+   nl();   
+
 }
 
 
