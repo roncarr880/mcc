@@ -993,13 +993,14 @@ switch (e1->datasize){
    case 2:
 /*   printf("\tpush\td\n"); */
    switch( e1->type ){
-      case CONSTANT: printf("\tLDY\t#%d\n",( int ) e1->val);   /* !!! ops backwards for ABY pointer */
+      case CONSTANT: printf("\tLDY\t#%d\n",( int ) e1->val);   /*  */
+                     e1->reg = HL;                            /* !!! new 2/27 */
       break;
 
       case STACKVAL: printf("\txchg\n");  
       pop( e1 );  
       printf("\txthl\n");  /* no break */
-      case VALUE : printf("\txchg\n");  
+      case VALUE : /* printf("\txchg\n"); */ 
       break;
 
       case FOUND:   
@@ -1079,7 +1080,11 @@ if( DBG ) printf("* In doop\n");
       loadval( e1 );
    } **** */
 
+check(HL);                    /* 2/27 */
   secval( e2 );
+if( e2->reg == HL ){          /* 2/27 */
+  printf("\tsty\t_tempY\n");
+}
   loadval( e1 );
 
 if( e1->datasize < 2 ){           /* char code */
@@ -1144,14 +1149,17 @@ if( e1->datasize < 2 ){           /* char code */
 else if( e1->datasize == 2 ) {  /* int and pointer code 8 + 16 */
    switch(op){
       case '+':
-         if( e1->var.ident == POINTER || e1->var.ident == ARRAY )  printf("\tABY\n");
+         if( e1->var.ident == POINTER || e1->var.ident == ARRAY ){
+            if( e2->reg == HL ) printf("\tLDD\t_tempY\n");
+            printf("\tABY\n");
+         }
          else{
-           printf("\tSTY\t_tempY\n");
+          /* printf("\tSTY\t_tempY\n");  2/27 */
            printf("\tADDD\t_tempY\n");
          }
       break; /* was dad d */
       case '-':
-         printf("\tSTY\t_tempY\n");
+        /* printf("\tSTY\t_tempY\n"); */
          printf("\tSUBD\t_tempY\n");
       break;
       case '>':
