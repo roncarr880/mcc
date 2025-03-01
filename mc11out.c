@@ -1070,20 +1070,10 @@ if( DBG ) printf("* In doop\n");
    if( e1->datasize > e2->datasize ) cast( e2, e1->datasize );
    else if( e2->datasize > e1->datasize ) cast( e1, e2->datasize);
    
-   /* will this work 
-   if( e1->datasize == 2 && e2->type == CONSTANT ){   /* swap for ABY 8 + 16 pointer add 
-     loadval( e2 );
-     secval( e1 );
-   } 
-   else{   /* normal    /* try back to normal and add a xchg d and y for constant secval 
-      secval( e2 );
-      loadval( e1 );
-   } **** */
-
 check(HL);                    /* 2/27 */
   secval( e2 );
-if( e2->reg == HL ){          /* 2/27 */
-  printf("\tsty\t_tempY\n");
+if( e2->reg == HL && ( op == '+' || op == '-' ) ){          /* 2/27  2/28 */
+  printf("\tSTY\t_tempY\n");
 }
   loadval( e1 );
 
